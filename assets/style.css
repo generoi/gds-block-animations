@@ -1,74 +1,87 @@
 /**
  * GDS Animate Plugin Styles
- * Minimal base styles - customize in your theme for specific animations
+ * Base styles - customize in your theme for specific animations
  */
 
-/* Hidden state - elements with gds-block-animations-block class start hidden */
-.gds-block-animations-block {
-  /* Add .gds-animate-visible class to trigger animations */
-}
-
-/* Media & Text Block - example animation (customize in theme) */
-.wp-block-media-text.gds-block-animations-block {
+.wp-block-cover.gds-block-animations-block {
   opacity: 0;
-  transform: translateY(40px);
+  transform: translateY(30px);
   transition:
-    opacity 0.8s ease-out,
-    transform 0.8s ease-out;
+    opacity 0.6s ease-out,
+    transform 0.6s ease-out;
 }
 
-.wp-block-media-text.gds-animate-visible {
+.wp-block-cover.gds-animate-visible {
   opacity: 1;
   transform: translateY(0);
 }
 
-.wp-block-media-text.gds-animate-visible .wp-block-media-text__media {
-  animation: fadeInLeft 0.8s ease-out;
+/* Exclude above-the-fold cover block from animation */
+.is-root-container > .wp-block-cover:first-child.gds-block-animations-block {
+  opacity: 1;
+  transform: translateY(0);
+  transition: none;
 }
 
-.wp-block-media-text.gds-animate-visible .wp-block-media-text__content {
-  animation: fadeInRight 0.8s ease-out 0.2s both;
+/* Columns block animation - staggered columns */
+.wp-block-columns.gds-block-animations-block > .wp-block-column {
+  opacity: 0;
+  transform: translateY(40px);
+  transition:
+    opacity 0.5s ease-out,
+    transform 0.5s ease-out;
 }
 
-@keyframes fadeInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+.wp-block-columns.gds-animate-visible > .wp-block-column:nth-child(1) {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0s;
 }
 
-@keyframes fadeInRight {
-  from {
-    opacity: 0;
-    transform: translateX(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+.wp-block-columns.gds-animate-visible > .wp-block-column:nth-child(2) {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.1s;
 }
 
-/* Query Loop Block - customize animations in your theme */
-/* Example structure for theme:
- * .wp-block-query.gds-block-animations-block .your-child-selector { }
- * .wp-block-query.gds-animate-visible .your-child-selector { }
- */
+.wp-block-columns.gds-animate-visible > .wp-block-column:nth-child(3) {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.2s;
+}
 
-/* Reduce motion for accessibility */
-@media (prefers-reduced-motion: reduce) {
-  .gds-block-animations-block,
-  .wp-block-media-text.gds-block-animations-block {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
+.wp-block-columns.gds-animate-visible > .wp-block-column:nth-child(4) {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.3s;
+}
 
-  .wp-block-media-text.gds-animate-visible .wp-block-media-text__media,
-  .wp-block-media-text.gds-animate-visible .wp-block-media-text__content {
-    animation: none;
-  }
+.wp-block-columns.gds-animate-visible > .wp-block-column:nth-child(5) {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.4s;
+}
+
+.wp-block-columns.gds-animate-visible > .wp-block-column:nth-child(6) {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.5s;
+}
+
+.wp-block-columns.gds-animate-visible > .wp-block-column:nth-child(7) {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.6s;
+}
+
+.wp-block-columns.gds-animate-visible > .wp-block-column:nth-child(8) {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.7s;
+}
+
+.wp-block-columns.gds-animate-visible > .wp-block-column:nth-child(9) {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.8s;
 }
