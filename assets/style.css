@@ -1,87 +1,10 @@
 /**
- * GDS Animate Plugin Styles
- * Base styles - customize in your theme for specific animations
+ * GDS Block Animations — bundled helper (optional global animation CSS lives in settings).
  */
 
-.wp-block-cover.gds-block-animations-block {
-  opacity: 0;
-  transform: translateY(30px);
-  transition:
-    opacity 0.6s ease-out,
-    transform 0.6s ease-out;
-}
-
-.wp-block-cover.gds-animate-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Exclude above-the-fold cover block from animation */
-.is-root-container > .wp-block-cover:first-child.gds-block-animations-block {
-  opacity: 1;
-  transform: translateY(0);
-  transition: none;
-}
-
-/* Columns block animation - staggered columns */
-.wp-block-columns.gds-block-animations-block > .wp-block-column {
-  opacity: 0;
-  transform: translateY(40px);
-  transition:
-    opacity 0.5s ease-out,
-    transform 0.5s ease-out;
-}
-
-.wp-block-columns.gds-animate-visible > .wp-block-column:nth-child(1) {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 0s;
-}
-
-.wp-block-columns.gds-animate-visible > .wp-block-column:nth-child(2) {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 0.1s;
-}
-
-.wp-block-columns.gds-animate-visible > .wp-block-column:nth-child(3) {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 0.2s;
-}
-
-.wp-block-columns.gds-animate-visible > .wp-block-column:nth-child(4) {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 0.3s;
-}
-
-.wp-block-columns.gds-animate-visible > .wp-block-column:nth-child(5) {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 0.4s;
-}
-
-.wp-block-columns.gds-animate-visible > .wp-block-column:nth-child(6) {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 0.5s;
-}
-
-.wp-block-columns.gds-animate-visible > .wp-block-column:nth-child(7) {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 0.6s;
-}
-
-.wp-block-columns.gds-animate-visible > .wp-block-column:nth-child(8) {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 0.7s;
-}
-
-.wp-block-columns.gds-animate-visible > .wp-block-column:nth-child(9) {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 0.8s;
+/* Briefly applied when revealing while scrolling up so entrance motion does not run */
+.gds-block-animations-instant,
+.gds-block-animations-instant * {
+  transition: none !important;
+  animation: none !important;
 }
