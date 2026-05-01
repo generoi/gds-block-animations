@@ -883,7 +883,7 @@ function gdsBlockAnimationsEnqueueAssets()
         'gds-block-animations-script',
         plugin_dir_url(__FILE__) . 'assets/script.js',
         [],
-        '1.0.6',
+        '1.0.7',
         true
     );
 
@@ -1004,6 +1004,31 @@ function gdsBlockAnimationsAddBlockClass($blockContent, $block)
         );
 
         if ($isDisabled) {
+            return $blockContent;
+        }
+
+        /**
+         * Filter whether a specific block instance should be animated.
+         *
+         * Themes / mu-plugins can return false to skip animation for a
+         * particular block render (e.g. inside a specific post type, page
+         * template, or query context) without having to flip the editor
+         * sidebar toggle on every instance.
+         *
+         * @param bool   $shouldAnimate  Default true (block is in enabled list and not opted out via attrs).
+         * @param string $blockName      e.g. 'core/cover', 'beamex/stat'.
+         * @param array  $block          The full parsed block array (incl. attrs, innerBlocks).
+         * @param string $blockContent   The rendered HTML so far.
+         */
+        $shouldAnimate = apply_filters(
+            'gds_block_animations_should_animate',
+            true,
+            $block['blockName'],
+            $block,
+            $blockContent
+        );
+
+        if (!$shouldAnimate) {
             return $blockContent;
         }
 
