@@ -991,7 +991,8 @@ add_action('enqueue_block_editor_assets', 'gdsBlockAnimationsEnqueueEditorAssets
  */
 function gdsBlockAnimationsAddBlockClass($blockContent, $block)
 {
-    if (is_admin()) {
+    // Freeform (classic) content has a null blockName.
+    if (is_admin() || empty($block['blockName'])) {
         return $blockContent;
     }
 
