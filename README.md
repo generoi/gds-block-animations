@@ -130,6 +130,50 @@ gds-animate/
 - Blocks are observed once (not repeated on scroll up/down)
 - 50ms delay for blocks visible on page load ensures smooth animation
 
+## Extension Points
+
+These hooks are pure additions — sites that don't use them keep working unchanged.
+
+### PHP filter: `gds_block_animations_should_animate`
+
+Programmatically opt out of animation for a particular block render — useful when the editor sidebar toggle is too coarse (e.g. skip animation inside a specific post type or page template without flipping every instance).
+
+```php
+add_filter('gds_block_animations_should_animate', function ($should, $blockName, $block, $blockContent) {
+    // Don't animate covers inside the press release post type
+    if ($blockName === 'core/cover' && get_post_type() === 'press_release') {
+        return false;
+    }
+    return $should;
+}, 10, 4);
+```
+
+Default value is `true` (only called for blocks already in the enabled list and not opted out via the editor toggle).
+
+### JS event: `gds-block-animations:visible`
+
+Bubbling `CustomEvent` dispatched on each block element when it becomes visible. The detail object carries `{ instant: boolean, element: Element }`.
+
+```js
+document.addEventListener('gds-block-animations:visible', (e) => {
+  if (e.target.matches('.my-counter')) {
+    runCountUp(e.target);
+  }
+});
+```
+
+### JS helper: `gdsBlockAnimationsOnReveal(selector, callback)`
+
+Convenience wrapper around the event — handles selector matching, fires once per element, and runs the callback for blocks that were already visible at registration time (so late-loaded scripts don't miss above-the-fold reveals). Returns an unsubscribe function.
+
+```js
+const off = gdsBlockAnimationsOnReveal('.wp-block-my-block__counter', (el) => {
+  animateNumber(el, parseInt(el.dataset.target, 10));
+});
+
+// later: off(); to detach
+```
+
 ## License
 
 GPL-2.0+

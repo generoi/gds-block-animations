@@ -69,6 +69,20 @@
         });
       });
     }
+
+    // Notify subscribers — themes can hook this to run extra animations
+    // (e.g. number count-up, SVG draw) when a block enters view. Bubbles
+    // so a single document-level listener can catch any block.
+    try {
+      el.dispatchEvent(
+        new CustomEvent('gds-block-animations:visible', {
+          bubbles: true,
+          detail: { instant: !!instant, element: el },
+        }),
+      );
+    } catch (e) {
+      // Older browsers without CustomEvent constructor — silently skip.
+    }
   }
 
   /**
@@ -298,6 +312,64 @@
       }, 50);
     });
   }
+
+  /**
+   * Subscribe to block-reveal events. Returns an unsubscribe function.
+   *
+   * Convenience over the raw `gds-block-animations:visible` event — the
+   * helper handles selector matching, fires once per element, and runs
+   * the callback for blocks that are already visible at registration
+   * time (so late-loaded scripts don't miss above-the-fold reveals).
+   *
+   * @example
+   *   gdsBlockAnimationsOnReveal('.my-counter', (el) => {
+   *     animateNumber(el);
+   *   });
+   *
+   * @param {string} selector CSS selector — only matching descendants fire.
+   * @param {(el: Element) => void} callback Runs once per matched element.
+   * @returns {() => void} Unsubscribe function.
+   */
+  window.gdsBlockAnimationsOnReveal = function (selector, callback) {
+    if (typeof selector !== 'string' || typeof callback !== 'function') {
+      return function noop() {};
+    }
+
+    const fired = new WeakSet();
+
+    function handle(target) {
+      if (!target || !target.querySelectorAll) {
+        return;
+      }
+      const matches = target.matches && target.matches(selector) ? [target] : [];
+      const inside = Array.from(target.querySelectorAll(selector));
+      for (const el of matches.concat(inside)) {
+        if (fired.has(el)) continue;
+        fired.add(el);
+        try {
+          callback(el);
+        } catch (e) {
+          if (typeof console !== 'undefined') {
+            console.error('gdsBlockAnimationsOnReveal callback error:', e);
+          }
+        }
+      }
+    }
+
+    // Catch already-revealed blocks (e.g. above-the-fold + skip-above-fold).
+    const alreadyVisible = document.querySelectorAll('.gds-animate-visible');
+    alreadyVisible.forEach(handle);
+
+    function listener(event) {
+      handle(event.target);
+    }
+
+    document.addEventListener('gds-block-animations:visible', listener);
+
+    return function unsubscribe() {
+      document.removeEventListener('gds-block-animations:visible', listener);
+    };
+  };
 
   // Expose a global function for debugging
   window.gdsBlockAnimations = function () {
